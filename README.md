@@ -1,69 +1,41 @@
-# React + TypeScript + Vite
+# 📊 Financial Overview Table UI
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is a **responsive, dynamic table component** built using **React**, **@tanstack/react-table**, and **Tailwind CSS**, matching the design specifications from a Figma prototype. It includes rich features like status chips, alignment control, multi-colored headers, column resizing, and a flexible layout.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🔧 Features
 
-## Expanding the ESLint configuration
+- ✨ Clean, Figma-aligned UI
+- 📐 Custom column sizing based on Figma `W-` widths
+- 🧩 Icons in table headers (`react-icons`)
+- 🎨 Colored column headers with grouping (Q3 Overview, ABC, Extract, etc.)
+- 📊 Status indicators with contextual color
+- 🔀 Custom text alignment per column (`left`, `right`, `center`)
+- ↔️ Column resizing via drag
+- ➕ Empty row filler to ensure uniformity
+- 📎 Link rendering for URLs
+- 🧪 Click-to-select cell interaction
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 📦 Tech Stack
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+| Technology | Purpose |
+|------------|---------|
+| React      | UI Framework |
+| Tailwind CSS | Styling & layout |
+| @tanstack/react-table | Table logic |
+| React Icons | Header icons |
+| TypeScript | Type safety |
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 📁 Project Structure
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+```bash
+📦 src/
+ ┣ 📜 TaskTable.tsx         # Main table component
+ ┣ 📜 App.tsx               # Renders the TaskTable
+ ┣ 📜 index.tsx             # App entry point
+ ┣ 📜 index.css             # Tailwind base styles
