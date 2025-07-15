@@ -7,14 +7,10 @@ import {
 } from '@tanstack/react-table';
 
 import { FiBriefcase, FiCalendar, FiUser, FiLink, FiDollarSign } from 'react-icons/fi';
-import Link_icon from "../assets/Link_icon.svg";
-import Arrow_sync from "../assets/Arrow_sync.svg";
-import Arrow_split from "../assets/Arrow_split.svg";
-import { BsThreeDots } from 'react-icons/bs';
-import Arrow_split_white from "../assets/Arrow_split_white.svg"
 
-type StatusType = 'In-process' | 'Need to start' | 'Complete' | 'Blocked';
-type PriorityType = 'High' | 'Medium' | 'Low';
+
+type StatusType = 'In-process' | 'Need to start' | 'Complete' | 'Blocked' | '';
+type PriorityType = 'High' | 'Medium' | 'Low' | '';
 
 interface Task {
   job: string;
@@ -28,9 +24,16 @@ interface Task {
   value: string;
 }
 
+interface CustomMeta {
+  align?: string;
+  icon?: React.ReactNode;
+  headerBgColor?: string;
+  textColor?: string;
+}
+
 const data: Task[] = [
   {
-    job: 'Launch social media campaign for product',
+    job: 'Launch social media campaign for product Launch social media campaign for product',
     submitted: '15-11-2024',
     status: 'In-process',
     submitter: 'Aisha Patel',
@@ -88,19 +91,28 @@ const data: Task[] = [
 
 export default function TaskTable() {
   const MIN_ROWS = 20;
-  const MIN_COLUMNS = 10;
-
   const [selectedCell, setSelectedCell] = useState<{ row: number; col: string | number } | null>(null);
   const [columnSizing, setColumnSizing] = useState({});
 
-  const columns: ColumnDef<Task>[] = [
-    { accessorKey: 'job', header: 'Job Request', size: 280, meta: { align: 'text-left', icon: <FiBriefcase />} },
-    { accessorKey: 'submitted', header: 'Submitted', size: 140, meta: { align: 'text-right', icon: <FiCalendar />} },
+  const columns: ColumnDef<Task, unknown>[] = [
+    {
+      accessorKey: 'job',
+      header: 'Job Request',
+      maxSize: 300,
+      size: 280,
+      meta: { align: 'text-left', icon: <FiBriefcase /> } as CustomMeta,
+    },
+    {
+      accessorKey: 'submitted',
+      header: 'Submitted',
+      size: 140,
+      meta: { align: 'text-right', icon: <FiCalendar /> } as CustomMeta,
+    },
     {
       accessorKey: 'status',
       header: 'Status',
       size: 140,
-      meta: { align: 'text-center'},
+      meta: { align: 'text-center' } as CustomMeta,
       cell: ({ row }) => {
         const status = row.original.status;
         let bgColor = '';
@@ -111,7 +123,7 @@ export default function TaskTable() {
           case 'Need to start': bgColor = 'bg-[#E2E8F0]'; textColor = 'text-[#334155]'; break;
           case 'Complete': bgColor = 'bg-[#D3F2E3]'; textColor = 'text-[#027A48]'; break;
           case 'Blocked': bgColor = 'bg-[#FFE1DE]'; textColor = 'text-[#B42318]'; break;
-          default: bgColor = 'bg-gray-300'; textColor = 'text-black';
+          default: bgColor = ''; textColor = 'text-black';
         }
 
         return (
@@ -121,24 +133,44 @@ export default function TaskTable() {
         );
       },
     },
-    { accessorKey: 'submitter', header: 'Submitter', size: 140, meta: { align: 'text-left', icon: <FiUser /> } } ,
+    {
+      accessorKey: 'submitter',
+      header: 'Submitter',
+      size: 140,
+      meta: { align: 'text-left', icon: <FiUser /> } as CustomMeta,
+    },
     {
       accessorKey: 'url',
       header: 'URL',
       size: 140,
-      meta: { align: 'text-left', icon: <FiLink /> },
+      maxSize: 140,
+      meta: { align: 'text-left', icon: <FiLink /> } as CustomMeta,
       cell: ({ row }) => (
         <a href={`https://${row.original.url}`} className="underline" target="_blank" rel="noopener noreferrer">
           {row.original.url}
         </a>
       ),
     },
-    { accessorKey: 'assigned', header: 'Assigned', size: 140, meta: { align: 'text-left', icon: <FiUser />,headerBgColor:'bg-[#E8F0E9]', textColor :'text-[#666C66]' } },
+    {
+      accessorKey: 'assigned',
+      header: 'Assigned',
+      size: 140,
+      meta: {
+        align: 'text-left',
+        icon: <FiUser />,
+        headerBgColor: 'bg-[#E8F0E9]',
+        textColor: 'text-[#666C66]',
+      } as CustomMeta,
+    },
     {
       accessorKey: 'priority',
       header: 'Priority',
       size: 120,
-      meta: { align: 'text-center', headerBgColor: 'bg-[#EAE3FC]',textColor :'text-[#655C80]' },
+      meta: {
+        align: 'text-center',
+        headerBgColor: 'bg-[#EAE3FC]',
+        textColor: 'text-[#655C80]',
+      } as CustomMeta,
       cell: ({ row }) => {
         const priority = row.original.priority;
         let textColor = '';
@@ -151,8 +183,28 @@ export default function TaskTable() {
         return <span className={`${textColor} font-semibold`}>{priority}</span>;
       },
     },
-    { accessorKey: 'dueDate', header: 'Due Date', size: 140, meta: { align: 'text-right', icon: <FiCalendar />, headerBgColor: 'bg-[#EAE3FC]',textColor :'text-[#655C80]' } },
-    { accessorKey: 'value', header: 'Est. Value', size: 140, meta: { align: 'text-right', icon: <FiDollarSign />, headerBgColor: 'bg-[#FFE9E0]',textColor :'text-[#8C6C62]' } },
+    {
+      accessorKey: 'dueDate',
+      header: 'Due Date',
+      size: 140,
+      meta: {
+        align: 'text-right',
+        icon: <FiCalendar />,
+        headerBgColor: 'bg-[#EAE3FC]',
+        textColor: 'text-[#655C80]',
+      } as CustomMeta,
+    },
+    {
+      accessorKey: 'value',
+      header: 'Est. Value',
+      size: 140,
+      meta: {
+        align: 'text-right',
+        icon: <FiDollarSign />,
+        headerBgColor: 'bg-[#FFE9E0]',
+        textColor: 'text-[#8C6C62]',
+      } as CustomMeta,
+    },
   ];
 
   const table = useReactTable({
@@ -168,58 +220,47 @@ export default function TaskTable() {
   const rowCount = table.getRowModel().rows.length;
   const extraRows = MIN_ROWS - rowCount > 0 ? MIN_ROWS - rowCount : 0;
 
+  const handleKeyNavigation = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (!selectedCell) return;
+
+    let { row, col } = selectedCell;
+    const colKeys = table.getVisibleLeafColumns().map(col => col.id);
+    const colIndex = typeof col === 'string' ? colKeys.indexOf(col) : col;
+
+    switch (e.key) {
+      case 'ArrowUp':
+        if (row > 0) setSelectedCell({ row: row - 1, col });
+        break;
+      case 'ArrowDown':
+        if (row + 1 < table.getRowModel().rows.length + extraRows) {
+          setSelectedCell({ row: row + 1, col });
+        }
+        break;
+      case 'ArrowLeft':
+        if (colIndex > 0) setSelectedCell({ row, col: colKeys[colIndex - 1] });
+        break;
+      case 'ArrowRight':
+        if (colIndex < colKeys.length - 1) {
+          setSelectedCell({ row, col: colKeys[colIndex + 1] });
+        }
+        break;
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
-      <div className="overflow-x-auto flex-1">
+      <div tabIndex={0} className="overflow-x-auto flex-1 outline-0" onKeyDown={handleKeyNavigation}>
         <table className="min-w-full table-fixed border border-gray-300 border-collapse">
           <thead>
-            <tr >
-              <th className="bg-white border border-gray-300 p-3" />
-              <th colSpan={4} className=" bg-[#E2E2E2] text-left  p-2">
-                <div className='flex gap-[8px]'>
-                  <div className='flex gap-[8px] text-[#545454] font-normal p-[4px] rounded-lg bg-[#EEEEEE] w-[220px]'>
-                    <img src={Link_icon} alt="url" className='w-[20px]' onClick={() => console.log('Link clicked')} />
-                    Q3 Financial Overview</div>
-                  <img src={Arrow_sync} alt="sync" className='w-5 cursor-pointer' onClick={() => console.log('Data Synced')} />
-
-
-                </div>
-              </th>
-              <th className="bg-white  p-3" />
-              <th className="bg-[#D2E0D4] text-[#505450]  border border-white p-3 text-center">
-                <div className='flex text-[#505450] items-center gap-[6px]'>
-                  <img src={Arrow_split} alt="split" className='w-[23px]' />
-                  ABC
-                  <BsThreeDots className=" text-[#AFAFAF]" />
-                </div>
-              </th>
-              <th colSpan={2} className="bg-[#DCCFFC] text-[#463E59] border border-white p-3 text-center">
-                <div className='flex items-center text-[#463E59] gap-[6px]'>
-                  <img src={Arrow_split_white} alt="split" className='w-[23px]' />
-                  Answer a question
-                  <BsThreeDots className=" text-[#AFAFAF]" />
-                </div>
-
-              </th>
-              <th className="bg-[#FAC2AF] text-[#463e59] border border-white p-3 text-center">
-                <div className='flex items-center text-[#695149] gap-[6px]'>
-                  <img src={Arrow_split_white} alt="split" className='w-[23px]' />
-                  Extract
-                  <BsThreeDots className=" text-[#AFAFAF]" />
-                  </div>
-              </th>
-              <th className="bg-[#EEEEEE] text-2xl w-[140px] border border-gray-300 font-thin text-center">+</th>
-            </tr>
-
             <tr>
               <th className="p-3 border border-gray-300 text-center text-[#AFAFAF] text-xl w-[32px] bg-[#EEEEEE]">#</th>
               {table.getHeaderGroups()[0].headers.map((header) => {
-                const meta = header.column.columnDef.meta || {};
+                const meta = header.column.columnDef.meta as CustomMeta;
                 return (
                   <th
                     key={header.id}
-                    className={`p-3 border border-gray-300 font-semibold relative ${meta.align || 'text-left'} ${meta.headerBgColor || 'bg-[#EEEEEE]'} ${meta.textColor || 'text-[#757575]'}`}
-                    style={{ width: header.getSize() }}
+                    className={`pt-3 pb-3 pl-3 border border-gray-300 font-semibold relative ${meta.align || 'text-left'} ${meta.headerBgColor || 'bg-[#EEEEEE]'} ${meta.textColor || 'text-[#757575]'}`}
+                    style={{ width: header.getSize(), maxWidth: header.column.columnDef.maxSize }}
                   >
                     <div className="relative flex items-center gap-1 select-none">
                       {meta.icon}
@@ -227,54 +268,74 @@ export default function TaskTable() {
                       <div
                         onMouseDown={header.getResizeHandler()}
                         onTouchStart={header.getResizeHandler()}
-                        className={`absolute right-0 top-0 h-full w-1 cursor-col-resize select-none touch-none ${header.column.getIsResizing() ? 'bg-gray-500' : 'hover:bg-gray-400'}`}
+                        className={`absolute right-0 top-0 h-full w-1 cursor-col-resize ${
+                          header.column.getIsResizing() ? 'bg-gray-500' : 'hover:bg-gray-400'
+                        }`}
                       />
                     </div>
                   </th>
                 );
               })}
-              {/* <th className="p-3 border border-gray-300 text-left font-semibold w-12 bg-[#EEEEEE]">+</th> */}
+              <th className="p-3 border border-gray-300 w-[48px]"></th>
             </tr>
           </thead>
-
           <tbody>
             {table.getRowModel().rows.map((row, rowIndex) => (
               <tr key={row.id} className="hover:bg-gray-50">
-                <td className="p-3 border text-[#757575] border-gray-300 w-[48px] text-center">{rowIndex + 1}</td>
+                <td className="p-3 border border-gray-300 w-[48px] text-center text-[#757575]">{rowIndex + 1}</td>
                 {row.getVisibleCells().map((cell) => {
-                  const meta = cell.column.columnDef.meta || {};
+                  const meta = cell.column.columnDef.meta as CustomMeta;
                   return (
                     <td
                       key={cell.id}
-                      className={`p-3 border border-gray-300 cursor-pointer ${meta.align || 'text-left'} ${selectedCell?.row === rowIndex && selectedCell?.col === cell.column.id ? 'bg-blue-100' : ''}`}
-                      style={{ width: cell.column.getSize() }}
+                      className={`truncate p-3 border cursor-pointer ${meta?.align || 'text-left'} ${
+                        selectedCell?.row === rowIndex && selectedCell?.col === cell.column.id ? 'outline-2 outline-[#6C8B70]' : ''
+                      } border-gray-300`}
+                      style={{ width: cell.column.getSize(), maxWidth: cell.column.columnDef.maxSize }}
                       onClick={() => {
-                        console.log(`Selected Cell: Row ${rowIndex + 1}, Column ${cell.column.id}`);
                         setSelectedCell({ row: rowIndex, col: cell.column.id });
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          const td = e.currentTarget as HTMLTableCellElement;
+                          td.contentEditable = 'true';
+                        }
                       }}
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>
                   );
                 })}
-                <td className="p-3 border border-gray-300 cursor-pointer w-[48px]"></td>
+                <td className="p-3 border border-gray-300 w-[48px]"></td>
               </tr>
             ))}
 
-            {Array.from({ length: extraRows }).map((_, rowIndex) => (
-              <tr key={`empty-row-${rowIndex}`} className="hover:bg-gray-50">
-                <td className="p-3 border text-[#757575] border-gray-300 w-[48px] text-center">{rowCount + rowIndex + 1}</td>
-                {Array.from({ length: MIN_COLUMNS - 1 }).map((_, index) => (
-                  <td
-                    key={`empty-cell-${rowIndex}-${index}`}
-                    className={`p-3 border border-gray-300 cursor-pointer text-left ${selectedCell?.row === rowCount + rowIndex && selectedCell?.col === `empty-${index}` ? 'bg-blue-100' : ''}`}
-                    onClick={() => {
-                      console.log(`Selected Empty Cell: Row ${rowCount + rowIndex + 1}, Empty Column ${index + 1}`);
-                      setSelectedCell({ row: rowCount + rowIndex, col: `empty-${index}` });
-                    }}
-                  ></td>
-                ))}
-                <td className="p-3 border border-gray-300 cursor-pointer w-[48px]"></td>
+            {/* Empty rows to fill MIN_ROWS */}
+            {Array.from({ length: extraRows }).map((_, emptyIndex) => (
+              <tr key={`empty-row-${emptyIndex}`} className="hover:bg-gray-50">
+                <td className="p-3 border text-[#757575] border-gray-300 w-[48px] text-center">
+                  {rowCount + emptyIndex + 1}
+                </td>
+                {table.getAllColumns().map((col, colIndex) => {
+                  const colId = col.id ?? `col-${colIndex}`;
+                  const meta = col.columnDef.meta as CustomMeta;
+
+                  return (
+                    <td
+                      key={`empty-cell-${emptyIndex}-${colId}`}
+                      className={`truncate p-3 border cursor-pointer ${meta?.align || 'text-left'} ${
+                        selectedCell?.row === rowCount + emptyIndex && selectedCell?.col === colId
+                          ? 'outline-2 outline-[#6C8B70]'
+                          : 'border-gray-300'
+                      }`}
+                      style={{ width: col.getSize(), maxWidth: col.columnDef.maxSize }}
+                      onClick={() => {
+                        setSelectedCell({ row: rowCount + emptyIndex, col: colId });
+                      }}
+                    />
+                  );
+                })}
+                <td className="p-3 border border-gray-300 w-[48px]"></td>
               </tr>
             ))}
           </tbody>
