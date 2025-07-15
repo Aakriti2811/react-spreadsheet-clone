@@ -295,9 +295,18 @@ const data: Task[] = [
   },
 ];
 
+declare module '@tanstack/react-table' {
+  interface ColumnMeta<TData, TValue> {
+    align?: string;
+    icon?: React.ReactNode;
+    headerBgColor?: string;
+    textColor?: string;
+  }
+}
+
 export default function TaskTable() {
+  
   const MIN_ROWS = 20;
-  const MIN_COLUMNS = 10;
 
   const [selectedCell, setSelectedCell] = useState<{ row: number; col: string | number } | null>(null);
   const [columnSizing, setColumnSizing] = useState({});
@@ -492,13 +501,6 @@ export default function TaskTable() {
                         console.log(`Selected Cell: Row ${rowIndex + 1}, Column ${cell.column.id}`);
                         setSelectedCell({ row: rowIndex, col: cell.column.id });
                       }}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                          e.contentEditable = true;
-                          console.log(`Editing Cell: Row ${rowIndex + 1}, Column ${cell.column.id}`);
-                          // Implement cell editing logic here
-                        }
-                      }}
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>
@@ -508,22 +510,6 @@ export default function TaskTable() {
               </tr>
             ))}
 
-            {/* {Array.from({ length: extraRows }).map((_, rowIndex) => (
-              <tr key={`empty-row-${rowIndex}`} className="hover:bg-gray-50">
-                <td className="p-3 border text-[#757575] border-gray-300 w-[48px] text-center">{rowCount + rowIndex + 1}</td>
-                {Array.from({ length: MIN_COLUMNS - 1 }).map((_, index) => (
-                  <td
-                    key={`empty-cell-${rowIndex}-${index}`}
-                    className={`truncate p-3 border cursor-pointer text-left ${selectedCell?.row === rowCount + rowIndex && selectedCell?.col === `empty-${index}` ? 'border-3 border-[#6C8B70]' : 'border-gray-300'}`}
-                    onClick={() => {
-                      console.log(`Selected Empty Cell: Row ${rowCount + rowIndex + 1}, Empty Column ${index + 1}`);
-                      setSelectedCell({ row: rowCount + rowIndex, col: `empty-${index}` });
-                    }}
-                  ></td>
-                ))}
-                <td className="p-3 border border-gray-300 cursor-pointer w-[48px]"></td>
-              </tr>
-            ))} */}
           </tbody>
         </table>
       </div>
